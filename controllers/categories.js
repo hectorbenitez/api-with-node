@@ -1,9 +1,21 @@
 const CategoryModel = require('../models/category');
 
-// GET /categories
+// GET /categories?page=1&limit=15
 function getCategories(req, res) {
-    CategoryModel.find({}).then((categories) => {
-        res.send(categories);
+    const { page, limit } = req.pagination;
+
+    CategoryModel.find({})
+    .limit(Number(limit))
+    .skip((page - 1) * Number(limit))
+    .then(async (categories) => {
+        const count = await CategoryModel.countDocuments();
+
+        res.send({
+            totalResults: count,
+            results: categories,
+            nextPage: `http://localhost:3000/api/categories?page=${Number(page) + 1}&limit=3`,
+            previousPage: `http://localhost:3000/api/categories?page=${Number(page) - 1}&limit=3`,
+        });
     }).catch((err) => {
         console.log(err);
         res.sendStatus(500);
