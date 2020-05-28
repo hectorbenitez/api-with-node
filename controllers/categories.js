@@ -2,12 +2,22 @@ const CategoryModel = require('../models/category');
 
 // GET /categories?page=1&limit=15
 function getCategories(req, res) {
+    
     const { page, limit } = req.pagination;
+    const sortData = {};
+
+    if (req.query.sort) {
+        if (req.query.order === 'descending') {
+            sortData[req.query.sort] = -1;
+        } else {
+            sortData[req.query.sort] = 1;
+        }
+    }
 
     CategoryModel.find({})
     .limit(Number(limit))
     .skip((page - 1) * Number(limit))
-    .then(async (categories) => {
+    .sort(sortData).then(async (categories) => {
         const count = await CategoryModel.countDocuments();
 
         res.send({

@@ -1,6 +1,7 @@
 const express = require('express');
 
 const {getCategories, getCategory, createCategory} = require('../controllers/categories');
+const questionsController = require('./../controllers/questions')
 
 function paginationMiddleware(req, res, next) {
     let { page = 1, limit = 15 } = req.query;
@@ -32,9 +33,10 @@ module.exports = () => {
     router.route('/categories/:slug')
         .get(getCategory);
 
+    // /categories/movies/questions
     router.route('/categories/:slug/questions')
-        // .get(paginationMiddleware, getQuestions)
-        .post();
+        .get(questionsController.getQuestionsForCategory)
+        .post(questionsController.createQuestion);
 
     router.route('/questions/:questionId')
         .get();
