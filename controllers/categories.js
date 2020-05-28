@@ -2,7 +2,16 @@ const CategoryModel = require('../models/category');
 
 // GET /categories
 function getCategories(req, res) {
-    CategoryModel.find({}).then((categories) => {
+    const sortData = {}
+    if (req.query.sort) {
+        if (req.query.order === 'descending') {
+            sortData[req.query.sort] = -1;
+        } else {
+            sortData[req.query.sort] = 1;
+        }
+    }
+
+    CategoryModel.find({}).sort(sortData).then((categories) => {
         res.send(categories);
     }).catch((err) => {
         console.log(err);

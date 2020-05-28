@@ -1,6 +1,7 @@
 const express = require('express');
 
 const {getCategories, getCategory, createCategory} = require('../controllers/categories');
+const questionsController = require('./../controllers/questions')
 
 /**
  * /categories
@@ -20,9 +21,10 @@ module.exports = () => {
     router.route('/categories/:slug')
         .get(getCategory);
 
+    // /categories/movies/questions
     router.route('/categories/:slug/questions')
-        .get()
-        .post();
+        .get(questionsController.getQuestionsForCategory)
+        .post(questionsController.createQuestion);
 
     router.route('/questions/:questionId')
         .get();

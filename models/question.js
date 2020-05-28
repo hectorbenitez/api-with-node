@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const {Schema} = mongoose;
 
 const QuestionSchema = new Schema({
-    categorySlug: { type: String, required: true },
+    category: { type: Schema.Types.ObjectId, ref: "Category", required: true },
     question: { type: String, required: true },
     answer: { type: String, required: true },
 }, {
